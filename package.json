@@ -18,7 +18,8 @@
   },
   "homepage": "https://github.com/clayshubert/FREDSociallyAssistiveApp#readme",
   "dependencies": {
-    "firebase": "^9.16.0"
+    "firebase": "^9.16.0",
+    "serve": "^14.2.0"
   },
   "devDependencies": {
     "webpack": "^5.75.0",
