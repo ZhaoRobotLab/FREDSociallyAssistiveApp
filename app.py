@@ -14,10 +14,9 @@ def greet():
     name = request.args.get('name')
     return f'Hello, {name}!'
 
-
 if __name__ == '__main__':
-    app.run()
     cred = credentials.Certificate("key.json")
     firebase_admin.initialize_app(cred)
     db = firestore.client()
+    app.run(debug=True,host='0.0.0.0',port=int(os.environ.get('PORT', 8080)))
     
