@@ -63,7 +63,8 @@ def register():
             #Create user in Firebase otherwise return error
             try: 
                 auth.create_user_with_email_and_password(email, password)
-                return render_template('home.html', msg = msg)
+                msg = 'Account created successfully !'
+                return render_template('login.html', msg = msg)
             except:
                 msg = 'Account Creation Failed !'
                 return render_template('register.html', msg = msg)
