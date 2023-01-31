@@ -5,8 +5,10 @@ from firebase import Firebase
 from flask import Flask, request, jsonify, render_template, redirect, url_for, request, session
 from firebase_admin import credentials, firestore, initialize_app
 
+#App initialization
 app = Flask(__name__)
 
+#App Pages
 @app.route('/')
 def home():
     msg = ''
@@ -72,10 +74,11 @@ def register():
 
     return render_template('register.html', msg = msg)
 
+#Main function
 if __name__ == '__main__':
+    #Intialize Firebase APIs
     cred = credentials.Certificate("key.json")
     firebase_admin.initialize_app(cred)
-
     firebaseConfig = {
         "apiKey": "AIzaSyAp9sn0EJli86ELaO9idVcqLEGqckdFHYw",
         "authDomain": "fredsocialbot.firebaseapp.com",
@@ -86,5 +89,6 @@ if __name__ == '__main__':
     auth = firebase.auth()
     db = firestore.client()
 
+    #Run app
     app.run(debug=True,host='0.0.0.0',port=int(os.environ.get('PORT', 8080)))
     
