@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title> FRED | Patients</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">                    
+    </head>
+    <body></br></br></br></br>
+        <div align="center">
+          <div align="center" class="border">
+             <div class="msg">{{ msg }}</div>
+                <div class="header">
+                    <h1 class="word">Patient Hub</h1>
+        </div>
+        </br></br></br>
+        <div class="msg">Search for a patient:</div>
+        <input id="patient" name="patient" type="text" placeholder="Enter Patient Name" class="textbox"/></br></br>
+        <input type="submit" class="btn" value="Search"></br></br>
+        <div class="msg">Or select a group below:</div>
+        </br>
+        <class="btn" type="submit" value="Search">
+                <a href="{{ url_for('dashboard') }}" class="btn">Back</a>
+          </div>
+        </div>
+    </body>
+</html>
