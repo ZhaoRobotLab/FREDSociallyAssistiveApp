@@ -42,6 +42,12 @@ def settings():
 @app.route('/patients', methods=['GET', 'POST'])
 def patients():
     msg = ''
+    #retrieve from db groups including current user as caretaker
+    groups = dbAD.collection('groups').where('caretaker', '==', auth.current_user['email']).get()
+    #list name of group documents in groups
+    msg = []
+    for group in groups:
+        msg.append(group.id)
     if request.method == 'POST' and 'patient' in request.form:
         patientName = request.form['patient']
     #db.child("patients").order_by_child("name").equal_to(10).get()
