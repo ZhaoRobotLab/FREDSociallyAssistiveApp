@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title> FRED | Dashboard</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">                     
+    </head>
+    <body>
+        <div align="center">
+            <div align="center" class="border">
+                <div class="header">
+                    <h1 class="word">Dashboard</h1>
+                    <div class="msg">Welcome {{ userid }}</div>
+                    <br></br>
+                    <button onclick="location.href='{{ url_for('profile') }}'" class="btn animated">My Profile</button>
+                    <br></br>
+                    <button onclick="location.href='{{ url_for('settings') }}'" class="btn animated">Settings</button>
+                    <br></br>
+                    <button onclick="location.href='{{ url_for('patients') }}'" class="btn animated">My Patients</button>
+                    <br></br><br></br>
+                    <a href="{{ url_for('logout') }}" class="btn">Logout</a>
+                </div>
+            </div>
+        </div>
+        <script>
+            const buttons = document.querySelectorAll('.animated');
+
+            buttons.forEach(button => {
+                button.addEventListener('mouseover', () => {
+                    button.classList.add('animate__animated', 'animate__bounce');
+                });
+
+                button.addEventListener('mouseout', () => {
+                    button.classList.remove('animate__animated', 'animate__bounce');
+                });
+            });
+        </script>
+    </body>
+</html>
