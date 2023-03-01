@@ -1,6 +1,17 @@
 /* Exo thin font from Google. */
 @import url(https://fonts.googleapis.com/css?family=Exo:100);
 
+#logo {
+  background-image: url('assets/fredlogo.png');
+  background-size: contain;
+  background-position: center top;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 .header{
     padding: 5px 120px;
     width: 150px;
