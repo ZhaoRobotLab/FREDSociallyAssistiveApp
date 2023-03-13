@@ -11,14 +11,14 @@
                 <h1 class="word">Login</h1>
              </div></br></br></br>
             <h2 class="word">
-                <form action="{{ url_for('login') }}" method="post">
+                <form action="{{ url_for('auth_bp.login') }}" method="post">
                   <div class="msg">{{ msg }}</div>
                     <input id="email" name="email" type="text" placeholder="Enter Your Email" class="textbox"/></br></br>
                     <input id="password" name="password" type="password" placeholder="Enter Your Password" class="textbox"/></br></br></br>
                     <input type="submit" class="btn" value="Sign In"></br></br>
                 </form>
             </h2>
-            <p class="bottom">Don't have an account?  <a class="bottom" href="{{url_for('register')}}"> Sign Up here</a></p>
+            <p class="bottom">Don't have an account?  <a class="bottom" href="{{url_for('auth_bp.register')}}"> Sign Up here</a></p>
           </div>
         </div>
     </body>
