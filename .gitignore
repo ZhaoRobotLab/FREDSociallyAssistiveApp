@@ -2,3 +2,5 @@ key.json
 .DS_Store
 vfred/
 client_secret*.json
+__pycache__/
+FRED/__pycache__/

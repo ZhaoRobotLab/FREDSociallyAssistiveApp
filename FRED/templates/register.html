@@ -11,7 +11,7 @@
                 <h1 class="word">Register</h1>
              </div></br></br></br>
             <h2 class="word">
-                <form action="{{ url_for('register') }}" method="post">
+                <form action="{{ url_for('auth_bp.register') }}" method="post">
                   <div class="msg">{{ msg }}</div>
                     <input id="fullname" name="fullname" type="text" placeholder="Full Name" class="textbox"/></br></br>
                     <input id ="userid" name="userid" type="text" placeholder="User ID" class="textbox"/></br></br>
@@ -22,7 +22,7 @@
                     <input type="submit" class="btn" value="Sign Up"></br>
                 </form>
             </h2>
-            <p class="bottom">Already have an account?  <a class="bottom" href="{{url_for('login')}}"> Sign In here</a></p>
+            <p class="bottom">Already have an account?  <a class="bottom" href="{{url_for('auth_bp.login')}}"> Sign In here</a></p>
           </div>
         </div>
     </body>
