@@ -3,4 +3,5 @@ key.json
 vfred/
 client_secret*.json
 __pycache__/
-FRED/key
+FRED/key/key*
+
