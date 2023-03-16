@@ -4,7 +4,7 @@ from flask import Flask
 
 def create_app():
     app = Flask(__name__)
-    #app.config['SECRET_KEY'] = 'fred'
+    app.config['SECRET_KEY'] = 'secretkey' #figure out
     
     from .views import views
     from .auth_bp import auth_bp
