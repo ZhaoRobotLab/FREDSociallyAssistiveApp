@@ -72,6 +72,7 @@ def register():
                     'phone': phone,
                     'userid': userid,
                     'email': email,
+                    'FREDs': []
                 }
                 dbAD.collection('users').document(email).set(data)
                 return render_template('login.html', msg = msg)
