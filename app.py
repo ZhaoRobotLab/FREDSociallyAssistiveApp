@@ -27,12 +27,50 @@ def dashboard():
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
     #get current user information from db
+    msg=''
     user = auth.current_user
     email = auth.current_user['email']
     name = dbAD.collection('users').document(email).get().to_dict()['name']
     userid = dbAD.collection('users').document(email).get().to_dict()['userid']
     phone = dbAD.collection('users').document(email).get().to_dict()['phone']
-    return render_template('profile.html', email=email, name=name, userid=userid, phone=phone)
+
+    #update user information
+    if request.method == 'POST' and 'fullname' in request.form and 'phone' in request.form and 'userid' in request.form :
+        #submit fields that are not empty
+        fullname = request.form['fullname']
+        phone = request.form['phone']
+        userid = request.form['userid']
+        #error check user entry
+        if not re.match(r'[^a-zA-Z0-9]+[^ ]', request.form['fullname']):
+            return render_template('profile.html', email=email, name=name, userid=userid, phone=phone, msg="Full name must be alphanumeric")
+        elif re.match(r'[^a-zA-Z0-9]', request.form['userid']):
+            return render_template('profile.html', email=email, name=name, userid=userid, phone=phone, msg="User ID must be alphanumeric")
+        elif len(request.form['userid']) >16:
+            return render_template('profile.html', email=email, name=name, userid=userid, phone=phone, msg="User ID must be less than 16 characters")
+        elif re.match(r'[^0-9]', request.form['phone']):
+            return render_template('profile.html', email=email, name=name, userid=userid, phone=phone, msg="Phone number must be numeric")
+        elif len(request.form['phone']) != 10:
+            return render_template('profile.html', email=email, name=name, userid=userid, phone=phone, msg="Phone number must be 10 digits")
+        elif request.form['phone'] == phone and request.form['userid'] == userid and request.form['fullname'] == name:
+            return render_template('profile.html', email=email, name=name, userid=userid, phone=phone, msg="No changes made")
+        else:
+            try:
+                #data = { 
+                #    'userid': userid,
+                #    'name': fullname,
+                #    'phone': phone,
+                #    'email': email
+                #}
+                dbAD.collection('users').document(email).update({ 
+                    'userid': userid,
+                    'name': fullname,
+                    'phone': phone,
+                }, merge=True)
+                return render_template('profile.html', email=email, name=name, userid=userid, phone=phone, msg="Changes saved")
+            except:
+                return render_template('profile.html', email=email, name=name, userid=userid, phone=phone, msg="Error saving changes")
+    else:
+        return render_template('profile.html', email=email, name=name, userid=userid, phone=phone, msg=msg)
 
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
@@ -62,7 +100,7 @@ def login():
         try:
             auth.current_user = auth.sign_in_with_email_and_password(email, password)
             user = auth.current_user
-            auth.current_user['displayName'] = dbAD.collection('users').document(user['email']).get().to_dict()['userid']
+            #auth.current_user['displayName'] = dbAD.collection('users').document(user['email']).get().to_dict()['userid']
             return redirect(url_for('dashboard'))
         except:
             msg = 'Please check your login details and try again'
@@ -79,11 +117,11 @@ def logout():
 @app.route('/register', methods =['GET', 'POST'])
 def register():
     msg = ''
-    if request.method == 'POST' and 'fullname' in request.form and 'phone' in request.form and 'userid' in request.form and 'confirmPassword' in request.form and 'password' in request.form and 'email' in request.form :
+    if request.method == 'POST' and 'confirmPassword' in request.form and 'password' in request.form and 'email' in request.form :#and 'fullname' in request.form and 'phone' in request.form and 'userid' in request.form:
         #Grab fields from register page
-        fullname = request.form['fullname']
-        phone = request.form['phone']
-        userid = request.form['userid']
+        #fullname = request.form['fullname']
+        #phone = request.form['phone']
+        #userid = request.form['userid']
         email = request.form['email']
         password = request.form['password']
         confirmPassword = request.form['confirmPassword']
@@ -91,17 +129,17 @@ def register():
         #Error check user entry
         if not re.match(r'[^@]+@[^@]+\.[^@]+', email):
             msg = 'Invalid email address !'
-        elif len(userid) >16:
-            msg = 'User ID must be less than 16 characters !'
-        elif re.match(r'[^a-zA-Z0-9]', userid):
-            msg = 'User ID must be alphanumeric !'
-        elif re.match(r'[^a-zA-Z0-9]+[^ ]', fullname):
-            msg = 'Full name must be alphanumeric !'
+        #elif len(userid) >16:
+            #msg = 'User ID must be less than 16 characters !'
+        #elif re.match(r'[^a-zA-Z0-9]', userid):
+            #msg = 'User ID must be alphanumeric !'
+        #elif re.match(r'[^a-zA-Z0-9]+[^ ]', fullname):
+            #msg = 'Full name must be alphanumeric !'
         elif password != confirmPassword:
             msg = 'Passwords do not match !'
         elif len(password) < 8: 
             msg = 'Password must be at least 8 characters !'
-        elif not confirmPassword or not password or not email or not userid or not phone or not fullname:
+        elif not confirmPassword or not password or not email: #or not userid or not phone or not fullname:
             msg = 'Please fill out all fields !'
         else:
             #Create user in Firebase otherwise return error if registration unsuccessful
@@ -110,10 +148,10 @@ def register():
                 msg = 'Account created successfully !'
                 #Add user to database
                 data = {
-                    'name': fullname,
-                    'phone': phone,
-                    'userid': userid,
-                    'email': email,
+                    'name': '',
+                    'phone': '',
+                    'userid': '',
+                    'email': email
                 }
                 dbAD.collection('users').document(email).set(data)
                 return render_template('login.html', msg = msg)

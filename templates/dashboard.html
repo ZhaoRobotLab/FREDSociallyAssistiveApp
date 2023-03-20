@@ -11,11 +11,11 @@
                     <h1 class="word">Dashboard</h1>
                     <div class="msg">Welcome {{ userid }}</div>
                     <br></br>
-                    <button onclick="location.href='{{ url_for('profile') }}'" class="btn animated">My Profile</button>
+                    <button onclick="location.href='{{ url_for('profile') }}'" class="btn">My Profile</button>
                     <br></br>
-                    <button onclick="location.href='{{ url_for('settings') }}'" class="btn animated">Settings</button>
+                    <button onclick="location.href='{{ url_for('settings') }}'" class="btn">Settings</button>
                     <br></br>
-                    <button onclick="location.href='{{ url_for('patients') }}'" class="btn animated">My Patients</button>
+                    <button onclick="location.href='{{ url_for('patients') }}'" class="btn">My Patients</button>
                     <br></br><br></br>
                     <a href="{{ url_for('logout') }}" class="btn">Logout</a>
                 </div>

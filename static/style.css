@@ -10,8 +10,18 @@
 .border{
     padding: 0px 50px;
     width: 400px;
-    height: 450px;
+    /*height: 450px;*/
     border-radius: 0px;
+}
+
+#outer
+{
+    width:100%;
+    text-align: center;
+}
+.inner
+{
+    display: inline-block;
 }
 
 .btn {
