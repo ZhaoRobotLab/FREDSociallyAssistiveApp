@@ -29,9 +29,9 @@ app.config['firebase'] = firebase
 app.config['auth'] = auth
 app.config['db'] = db
     
-
+ssl_context = ('FRED/key/server.cert', 'FRED/key/server.key')
 
 #Main function
 if __name__ == '__main__':
     #Run app
-    app.run(debug=True,host='0.0.0.0',port=int(os.environ.get('PORT', 8080)))
+    app.run(debug=True,host='0.0.0.0',port=int(os.environ.get('PORT', 8080)), ssl_context= ssl_context)
