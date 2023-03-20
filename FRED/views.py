@@ -42,18 +42,22 @@ def settings():
 
 @views.route('/patients',methods = ['GET', 'POST'])
 def patients():
-    msg = ''
-    dbAD = current_app.config['dbAD']
-    auth = current_app.config['auth']
+    if request.method == 'POST':
+        ID = request.form['ID']
+        dbAD = current_app.config['dbAD']
+        auth = current_app.config['auth']
+        try:
+            patients = dbAD.collection('FREDs').document(ID).get().to_dict()['Patient']
+            patient_names = []
+            msg = 'If these are the correct patients, then confirm connection of your account to FRED #' + ID + ": "
+            for i, patient in enumerate(patients):
+                patient_name = (patient.get()).to_dict().get('name')
+                patient_names.append(patient_name)
 
-
-    #retrieve from db groups including current user as caretaker
-    groups = dbAD.collection('groups').where('caretaker', '==', auth.current_user['email']).get()
-    #list name of group documents in groups
-    msg = []
-    for group in groups:
-        msg.append(group.id)
-    if request.method == 'POST' and 'patient' in request.form:
-        patientName = request.form['patient']
-    #db.child("patients").order_by_child("name").equal_to(10).get()
-    return render_template('patients.html', msg = msg)
+            patient_names = ", ".join(patient_names)
+            msg = msg + patient_names
+            return render_template('patients.html', msg = msg)
+        except:
+            return render_template('patients.html', msg = 'FRED ID invalid')
+    else:
+        return render_template('patients.html')
