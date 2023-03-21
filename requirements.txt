@@ -8,6 +8,7 @@ cryptography==39.0.1
 Deprecated==1.2.13
 firebase-admin==6.1.0
 Flask==2.2.3
+Flask-SSLify==0.1.5
 gcloud==0.18.3
 google-api-core==2.11.0
 google-api-python-client==2.80.0

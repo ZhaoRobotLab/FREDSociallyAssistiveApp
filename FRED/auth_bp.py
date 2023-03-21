@@ -113,12 +113,12 @@ def calendar():
     #events_result = service.events().list(calendarId=calendar_id, timeMin=start_date, timeMax=end_date, singleEvents=True, orderBy='startTime').execute()
 
     #events = events_result.get('items', [])
-    primary_calendar = next((c for c in calendar_list.get('items') if c.get('primary')), None)
-    if primary_calendar:
-            calendar_id = primary_calendar.get('id')
-            return render_template('calendar.html', calendar_id=calendar_id)
-    else:
-        return "Primary calendar not found"
+    # primary_calendar = next((c for c in calendar_list.get('items') if c.get('primary')), None)
+    # if primary_calendar:
+    #         calendar_id = primary_calendar.get('id')
+    #         return render_template('calendar.html', calendar_id=calendar_id)
+    # else:
+    #     return "Primary calendar not found"
     #calendar_id = 'bereket1197@gmail.com'
     #return render_template('calendar.html', calendar_id=calendar_id)
     return f"Your Google Calendar(s): {calendar_list}"
