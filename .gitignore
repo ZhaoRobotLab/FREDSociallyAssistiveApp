@@ -6,5 +6,7 @@ __pycache__/
 FRED/key/*
 *.__pycache__
 *.pyc
+FRED/__pycache__/
+
 
 

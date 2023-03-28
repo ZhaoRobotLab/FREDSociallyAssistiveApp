@@ -107,40 +107,36 @@ url_callback = "https://127.0.0.1:8080/oauth2callback"
 def calendar():
     if "credentials" not in session:
         return redirect(url_for("auth_bp.google_auth"))
-    credentials = google.oauth2.credentials.Credentials.from_authorized_user_info(session["credentials"])
-    service = googleapiclient.discovery.build("calendar", "v3", credentials=credentials)
-    calendar_list = service.calendarList().list().execute()
-    #events_result = service.events().list(calendarId=calendar_id, timeMin=start_date, timeMax=end_date, singleEvents=True, orderBy='startTime').execute()
-
-    #events = events_result.get('items', [])
-    primary_calendar = next((c for c in calendar_list.get('items') if c.get('primary')), None)
-    if primary_calendar:
+    try:
+        credentials = google.oauth2.credentials.Credentials.from_authorized_user_info(session["credentials"])
+        service = googleapiclient.discovery.build("calendar", "v3", credentials=credentials)
+        calendar_list = service.calendarList().list().execute()
+        primary_calendar = next((c for c in calendar_list.get('items') if c.get('primary')), None)
+        if primary_calendar:
             calendar_id = primary_calendar.get('id')
             return render_template('calendar.html', calendar_id=calendar_id)
-    else:
-        return "Primary calendar not found"
-    #calendar_id = 'bereket1197@gmail.com'
-    #return render_template('calendar.html', calendar_id=calendar_id)
-    return f"Your Google Calendar(s): {calendar_list}"
+        else:
+            return "Primary calendar not found"
+    except google.auth.exceptions.RefreshError:
+        return redirect(url_for("auth_bp.google_auth"))
+
 
 @auth_bp.route('/google_auth')
 def google_auth():
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(client_key_file_path, scopes=client_scopes)
-    #flow.redirect_uri = url_for("auth_bp.oauth2callback", _external=True)
     flow.redirect_uri = url_callback
     authorization_url, state = flow.authorization_url(access_type="offline", prompt="consent")
     session["state"] = state
     return redirect(authorization_url)
 
+
 @auth_bp.route("/oauth2callback")
 def oauth2callback():
     state = session["state"]
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(client_key_file_path, scopes=client_scopes, state=state)
-    #flow.redirect_uri = url_for("auth_bp.oauth2callback", _external=True)
     flow.redirect_uri = url_callback
 
-    #authorization_response = request.url
-    authorization_response = url_callback + request.full_path
+    authorization_response = request.url
     flow.fetch_token(authorization_response=authorization_response)
     credentials = flow.credentials
     session["credentials"] = {
