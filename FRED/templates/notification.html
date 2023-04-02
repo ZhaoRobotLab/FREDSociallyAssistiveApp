@@ -1,0 +1,23 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title> FRED | Notification </title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">             
+    </head>
+    <img class = "fredlogo" src="{{ url_for('static', filename='fredlogo.png') }}" alt="FRED Logo">
+    <body>
+        <h1>Send a Notification</h1>
+        <form action="{{ url_for('views.notification') }}" method="post">
+            <label for="patient">Choose a patient:</label>
+            <select id="patient" name="patient">
+                {{ options | safe }}
+            </select>
+            <br><br>
+            <label for="message">Enter your message:</label>
+            <input id="message" name="message" type="text" placeholder="Enter Notification Message" class="textbox"/>
+            <br><br>
+            <input type="submit" class="btn" value="Send Notification"></br>
+        </form>
+        <a href="{{ url_for('views.dashboard') }}" class="btn">Back</a>
+    </body>
+</html>
