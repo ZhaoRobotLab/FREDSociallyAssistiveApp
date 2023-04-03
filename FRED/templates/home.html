@@ -1,17 +1,18 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title> FRED | Settings</title>
+        <title> FRED | Home</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">                    
     </head>
+    <img class = "fredlogo" src="{{ url_for('static', filename='fredlogo.png') }}" alt="FRED Logo">
     <body></br></br></br></br>
         <div align="center">
           <div align="center" class="border">
              <div class="msg">{{ msg }}</div>
                 <div class="header">
-                    <h1 class="word">Settings</h1>
+                    <h1 class="word">Dashboard</h1>
              </br></br></br>
-                <a href="{{ url_for('dashboard') }}" class="btn">Back</a>
+                <a href="{{ url_for('auth_bp.logout') }}" class="btn">Logout</a>
           </div>
         </div>
     </body>

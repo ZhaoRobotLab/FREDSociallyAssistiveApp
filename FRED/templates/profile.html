@@ -1,0 +1,24 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title> FRED | Profile</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">                     
+    </head>
+    <body></br></br></br></br>
+        <div align="center"> 
+          <div align="center" class="border">
+            <div class="header">
+            <h1 class="word">My Profile</h1>
+        </div>
+        </br></br></br>
+        <div class="msg">Name: {{ name }}</div>
+        <div class="msg">User ID: {{ userid }}</div>
+        <div class="msg">Email: {{ email }}</div>
+        <div class="msg">Phone: {{ phone }}</div>
+        </br></br></br>
+             <a href="{{ url_for('dashboard') }}" class="btn">Back</a>
+             </div>
+          </div>
+        </div>
+    </body>
+</html>
