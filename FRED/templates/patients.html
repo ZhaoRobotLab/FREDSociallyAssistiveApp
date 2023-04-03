@@ -1,26 +1,65 @@
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title> FRED | Patients</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">                    
-    </head>
-    <img class = "fredlogo" src="{{ url_for('static', filename='fredlogo.png') }}" alt="FRED Logo">
-    <body></br></br></br></br>
-        <div align="center">
-          <div align="center" class="border">
-            <div class="header">
-                <h1 class="word">Patient Hub</h1>
-        </div>
-        </br></br></br>
-        <form action="{{ url_for('views.patients') }}" method="post">
-            <div class="msg">Search for a patient:</div>
-            <input id="ID" name="ID" type="text" placeholder="Enter Patient Name" class="textbox"/></br></br>
-            <input type="submit" class="btn" value="Search"></br></br>
-        </form>
-        <div class="msg">{{ msg }}</div>
-        </br>
-        <a href="{{ url_for('views.dashboard') }}" class="btn">Back</a>
-          </div>
-        </div>
-    </body>
+  <head>
+    <meta charset="UTF-8">
+    <title> FRED | Patients</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">                    
+  </head>
+  <img class = "fredlogo" src="{{ url_for('static', filename='fredlogo.png') }}" alt="FRED Logo">
+  <body>
+    <div align="center">
+      <h1 class="word">Patient Hub</h1>
+      <form action="{{ url_for('auth_bp.login') }}" method="post">
+        <div class="msg">Search for a patient:</div>
+        <input id="patient" name="patient" type="text" placeholder="Enter Patient Name" class="textbox"/><br><br>
+        <input id="search" type="submit" class="btn" value="Search"><br><br>
+        <div class="msg">Or select an option below:</div><br><br>
+      </form>
+      <div id="outer">
+        <div class="inner"><button id="createGroup" class="btn" >Create Group</button></div>
+        <div class="inner"><button id="addPatient" class="btn" >Add Patient</button></div>
+        <div class="inner"><button id="viewGroup" class="btn" >View Group</button></div>
+      </div>
+      <form>
+        <input id="patientName" name="patientName" type="text" placeholder="Patient Name" class="textbox" style ="display: none;"/><br><br>
+        <input id="groupName" name="groupName" type="text" placeholder="Group Name" class="textbox" style ="display: none;"/><br><br>
+        <input id="phone" name="phone" type="text" placeholder="Phone Number" class="textbox" style ="display: none;"/><br><br>
+        <input id="makeChange" type="submit" class="btn" value="Submit" style ="display: none;"><br><br>
+        <class="btn" id="return" type="submit" style="display: none;">
+          <a href="{{ url_for('views.patients') }}" class="btn">Back to Patient Hub</a>
+      </form>
+    </div>
+    <div align="center">
+      <class="btn" type="submit">
+        <a href="{{ url_for('views.dashboard') }}" id="dashboard" class="btn">Back</a>
+    </div>
+    <script>
+      document.getElementById("createGroup").addEventListener("click", function(){
+        document.getElementById("dashboard").style.display = "none";
+        document.getElementById("return").style.display = "block";
+        document.getElementById("patientName").style.display = "none";
+        document.getElementById("groupName").style.display = "block";
+        document.getElementById("createGroup").style.display = "none";
+        document.getElementById("addPatient").style.display = "none";
+        document.getElementById("viewGroup").style.display = "none";
+        document.getElementById("makeChange").style.display = "block";
+      });
+      document.getElementById("addPatient").addEventListener("click", function(){
+        document.getElementById("dashboard").style.display = "none";
+        document.getElementById("return").style.display = "block";
+        document.getElementById("patientName").style.display = "block";
+        document.getElementById("createGroup").style.display = "none";
+        document.getElementById("addPatient").style.display = "none";
+        document.getElementById("viewGroup").style.display = "none";
+        document.getElementById("makeChange").style.display = "block";
+      });
+      document.getElementById("viewGroup").addEventListener("click", function(){
+        document.getElementById("dashboard").style.display = "none";
+        document.getElementById("return").style.display = "block";
+        document.getElementById("createGroup").style.display = "none";
+        document.getElementById("addPatient").style.display = "none";
+        document.getElementById("viewGroup").style.display = "none";
+        document.getElementById("makeChange").style.display = "block";
+      });
+    </script>
+  </body>
 </html>
