@@ -4,6 +4,7 @@
         <title> FRED | Dashboard</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">                     
     </head>
+    <img class = "fredlogo" src="{{ url_for('static', filename='fredlogo.png') }}" alt="FRED Logo">
     <body>
         <div align="center">
             <div align="center" class="border">
@@ -11,13 +12,17 @@
                     <h1 class="word">Dashboard</h1>
                     <div class="msg">Welcome {{ userid }}</div>
                     <br></br>
-                    <button onclick="location.href='{{ url_for('profile') }}'" class="btn animated">My Profile</button>
+                    <button onclick="location.href='{{ url_for('views.profile')}}'" class="btn animated">My Profile</button>
                     <br></br>
-                    <button onclick="location.href='{{ url_for('settings') }}'" class="btn animated">Settings</button>
+                    <button onclick="location.href='{{ url_for('views.settings')}}'" class="btn animated">Settings</button>
                     <br></br>
-                    <button onclick="location.href='{{ url_for('patients') }}'" class="btn animated">My Patients</button>
+                    <button onclick="location.href='{{ url_for('views.patients')}}'" class="btn animated">My Patients</button>
+                    <br></br>
+                    <button onclick="location.href='{{ url_for('views.notification')}}'" class="btn animated">Send Notification</button>
+                    <br></br>
+                    <button onclick="location.href='{{ url_for('auth_bp.calendar')}}'" class="btn animated">Google Calendar</button>
                     <br></br><br></br>
-                    <a href="{{ url_for('logout') }}" class="btn">Logout</a>
+                    <a href="{{ url_for('auth_bp.logout') }}" class="btn">Logout</a>
                 </div>
             </div>
         </div>

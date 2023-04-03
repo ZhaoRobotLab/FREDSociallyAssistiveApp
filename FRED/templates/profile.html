@@ -4,6 +4,7 @@
         <title> FRED | Profile</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">                     
     </head>
+    <img class = "fredlogo" src="{{ url_for('static', filename='fredlogo.png') }}" alt="FRED Logo">
     <body></br></br></br></br>
         <div align="center"> 
           <div align="center" class="border">
@@ -16,7 +17,7 @@
         <div class="msg">Email: {{ email }}</div>
         <div class="msg">Phone: {{ phone }}</div>
         </br></br></br>
-             <a href="{{ url_for('dashboard') }}" class="btn">Back</a>
+             <a href="{{ url_for('views.dashboard') }}" class="btn">Back</a>
              </div>
           </div>
         </div>
