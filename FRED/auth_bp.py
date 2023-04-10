@@ -3,7 +3,7 @@ import google.oauth2.credentials
 import google_auth_oauthlib.flow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-from datetime import datetime, time, timedelta
+from datetime import datetime, timedelta
 from google.auth.transport import requests
 import json
 import os
@@ -105,6 +105,7 @@ def logout():
     return redirect(url_for('auth_bp.login'))
 
 
+
 @auth_bp.route('/calendar', methods = ['GET', 'POST'])
 def calendar():
     if "credentials" not in session:
@@ -121,39 +122,80 @@ def calendar():
         # Save the updated credentials in the session
         session["credentials"] = credentials.to_json()
 
-    service = build("calendar", "v3", credentials=credentials)
+    events_service = build("calendar", "v3", credentials=credentials)
+    tasks_service = build("tasks", "v1", credentials=credentials)
 
-    #maybe let user decide what calendar shows up here with POST
-    calendar_list = service.calendarList().list().execute()
-    calendar_IDs = calendar_list.get('items', []) 
-    calendar_names = [calendar['summary'] for calendar in calendar_IDs]
 
+    # Retrieve the user's available calendars
+    calendar_list = events_service.calendarList().list().execute()
+    calendars = calendar_list.get('items', [])
+
+    if request.method == 'POST':
+        # Retrieve the selected calendar ID from the form data
+        selected_calendar_id = request.form.get('calendar_id')
+    else:
+        # Use the default calendar ID ('primary')
+        selected_calendar_id = 'primary'
+
+    # Prepare the start and end dates for the current week in both local and UTC time
     today = datetime.utcnow().date()
     start_of_week = today - timedelta(days=today.weekday())
     end_of_week = start_of_week + timedelta(days=6)
-
     start_of_week_utc = datetime.combine(start_of_week, datetime.min.time()).isoformat() + 'Z'
     end_of_week_utc = datetime.combine(end_of_week, datetime.max.time()).isoformat() + 'Z'
 
+    # Create a list of days in the week
+    week_days = []
+    for i in range(7):
+        day = start_of_week + timedelta(days=i)
+        week_days.append(day)
+
+    # Fetch events/tasks/reminders for the selected calendar ID and time range
+    events_by_day = {}
+    tasks_by_day = {}
+    reminders_by_day = {}
+
+    for day in week_days:
+        events_by_day[day] = []
+        tasks_by_day[day] = []
+        reminders_by_day[day] = []
+
     try:
-        #api call
-        events_result = service.events().list(
-            calendarId='primary', 
-            timeMin=start_of_week_utc, 
-            timeMax=end_of_week_utc, 
-            maxResults=10, 
-            singleEvents=True, 
-            orderBy='startTime'
-        ).execute()
+        #Fetch events
+        events_result = events_service.events().list(calendarId=selected_calendar_id, timeMin=start_of_week_utc, timeMax=end_of_week_utc, maxResults=10, singleEvents=True, orderBy='startTime').execute()
         events = events_result.get('items', [])
-        print('Should be working')
+        for event in events:
+            start = event['start'].get('dateTime', event['start'].get('date'))
+            event_date = datetime.fromisoformat(start).date()
+            if event_date in events_by_day:
+                events_by_day[event_date].append(event)
+
+        # Fetch tasks
+        tasks_result = tasks_service.tasks().list(tasklist=selected_calendar_id).execute()
+        tasks = tasks_result.get('items', [])
+        for task in tasks:
+            due_date_str = task.get('due')
+            if due_date_str:
+                due_date = datetime.strptime(due_date_str, '%Y-%m-%dT%H:%M:%S.%fZ').date()
+                if due_date in tasks_by_day:
+                    tasks_by_day[due_date].append(task)
+
+        # Fetch reminders
+        reminders_result = tasks_service.tasks().list(tasklist=selected_calendar_id, showCompleted=False, dueMin=start_of_week_utc, dueMax=end_of_week_utc).execute()
+        reminders = reminders_result.get('items', [])
+        for reminder in reminders:
+            due_date_str = reminder.get('due')
+            if due_date_str:
+                due_date = datetime.strptime(due_date_str, '%Y-%m-%dT%H:%M:%S.%fZ').date()
+                if due_date in reminders_by_day:
+                    reminders_by_day[due_date].append(reminder)
+
     except HttpError as error:
         print('An error occurred: %s' % error)
         events = []
 
-    print(events)
-    return render_template('calendar.html',events=events, calendar_names = calendar_names)
-
+    return render_template('calendar.html', events_by_day=events_by_day, tasks_by_day=tasks_by_day, reminders_by_day=reminders_by_day, 
+                            week_days=week_days, calendars=calendars, selected_calendar_id=selected_calendar_id)
 
 @auth_bp.route('/google_auth')
 def google_auth():
