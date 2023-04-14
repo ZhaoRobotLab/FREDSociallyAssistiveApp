@@ -88,10 +88,61 @@ def notification():
         patient = request.form['patient'] #patient name - want to change to email
         message = request.form['message'] #message for patient
 
-        print(patient)
-        print(message)
-
         return render_template('notification.html', options=options) 
     #Incompleted form
     else:
-        return render_template('notification.html', options=options)    
+        return render_template('notification.html', options=options)
+    
+@views.route('/mood',methods = ['GET', 'POST'])
+def mood():
+    dbAD = current_app.config['dbAD']
+    auth = current_app.config['auth']
+    user = auth.current_user
+    email = auth.current_user['email']
+
+    # Get the patient data from Firestore
+    caretaker_ref = dbAD.collection('users').document(email)
+    caretaker_dict = caretaker_ref.get().to_dict()
+    patient_refs = caretaker_dict['patients']
+    patients = []
+    for patient_ref in patient_refs:
+        patient_dict = patient_ref.get().to_dict()
+        patient_email = patient_dict['email']
+        patient_name = patient_dict['name']
+        patients.append({'name': patient_name})
+
+    options = ''
+    
+
+    if request.method == 'POST' and 'patient' in request.form:
+        selected_patient = request.form['patient'] #patient name - want to change to email
+
+        for patient in patients:
+            if(patient["name"] == selected_patient):
+                options += f'<option value="{patient["name"]}" selected>{patient["name"]}</option>'
+            else:
+                options += f'<option value="{patient["name"]}">{patient["name"]}</option>'
+  
+    else:   #Incompleted form
+        selected_patient = patients[0]["name"]
+        
+        for patient in patients:
+            options += f'<option value="{patient["name"]}">{patient["name"]}</option>'
+
+    moodmap = dbAD.collection('patients').document(selected_patient).get().to_dict()["mood"]
+
+    list = [(k, v) for k, v in moodmap.items()]
+
+    labels = [row[0] for row in list]
+    values = [row[1] for row in list]
+
+    # labels = []
+    # values = []
+    # for date, value in moodmap.items():
+    #     labels.append(date)
+    #     values.append(value)
+
+    print(labels)
+    print(values)
+
+    return render_template('mood.html', options=options, labels=labels, values=values)    
