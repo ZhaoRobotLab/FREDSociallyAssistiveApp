@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, current_app
+from datetime import datetime
 #from firebase_admin import auth
 
 
@@ -133,16 +134,9 @@ def mood():
 
     list = [(k, v) for k, v in moodmap.items()]
 
+    list = sorted(list, key = lambda x: datetime.strptime(x[0], '%m/%d/%Y'))
+
     labels = [row[0] for row in list]
     values = [row[1] for row in list]
-
-    # labels = []
-    # values = []
-    # for date, value in moodmap.items():
-    #     labels.append(date)
-    #     values.append(value)
-
-    print(labels)
-    print(values)
 
     return render_template('mood.html', options=options, labels=labels, values=values)    

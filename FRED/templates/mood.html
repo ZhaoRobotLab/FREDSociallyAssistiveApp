@@ -3,7 +3,7 @@
         <meta charset="UTF-8">
         <title> FRED | Mood </title>
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>           
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>           
     </head>
     <img class = "fredlogo" src="{{ url_for('static', filename='fredlogo.png') }}" alt="FRED Logo">
     <body>
@@ -15,29 +15,52 @@
             </select>
         </form>
         <br>
-
-        <canvas id="lineChart"></canvas>
-        <script>
-            var ctx = document.getElementByID("lineChart").getContext("2d");
-            var lineChart = new Chart(ctx, {
-                type: "line",
-                data: {
-                    labels: {{ labels | safe}},
-                    datasets: [
-                        {
-                            label: "Data points",
-                            data: {{ values | safe}},
-                            fill: false,
-                            borderColor: "rgb(75, 192, 192)",
-                            lineTension: 0.1
+        <canvas id="myChart"></canvas>
+            <script>
+                var ctx = document.getElementById('myChart').getContext('2d');
+                var labels = {{ labels | tojson }};
+                var values = {{ values | tojson }};
+                var data = {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Mood',
+                        data: values,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }]
+                };
+                var myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: data,
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 10
+                            }
+                            // plugins: {
+                            //     zoom: {
+                            //         zoom: {
+                            //             enabled: true,
+                            //             drag: true,
+                            //             mode: 'x',
+                            //         },
+                            //         pan: {
+                            //             enabled: true,
+                            //             mode: 'x',
+                            //         }
+                            //     }
+                            // }
+                            // x: {
+                            //     type: 'time',
+                            //     time: {
+                            //         unit: 'day'
+                            //     }
                         }
-                    ]
-                },
-                options: {
-                    responsive: false
-                }
-            });
-        </script>
+                    }
+                });
+            </script>
 
         <br>
         <a href="{{ url_for('views.dashboard') }}" class="btn">Back</a>
