@@ -77,7 +77,7 @@ def notification():
     patients = []
     for patient_ref in patient_refs:
         patient_dict = patient_ref.get().to_dict()
-        patient_email = patient_dict['email']
+        #patient_email = patient_dict['email']
         patient_name = patient_dict['name']
         patients.append({'name': patient_name})
 
@@ -88,6 +88,11 @@ def notification():
     if request.method == 'POST' and 'patient' in request.form and 'message' in request.form:
         patient = request.form['patient'] #patient name - want to change to email
         message = request.form['message'] #message for patient
+
+        doc_ref = dbAD.collection('patients').document(patient)
+        current_time = datetime.now().strftime('%m/%d/%Y %H:%M:%S')
+        doc_ref.update({'messages.' + current_time: message})
+        doc_ref.update({'notification': True})
 
         return render_template('notification.html', options=options) 
     #Incompleted form
