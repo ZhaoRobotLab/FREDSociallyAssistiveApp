@@ -1,31 +1,43 @@
+<!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title> FRED | Register </title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">             
-    </head>
-    <img class = "fredlogo" src="{{ url_for('static', filename='fredlogo.png') }}" alt="FRED Logo">
-    <body></br></br></br></br></br>
-        <div align="center">
-          <div align="center" class="border">
-             <div class="header">
-                <h1 class="word">Register</h1>
-             </div></br></br></br>
-            <h2 class="word">
-                <form action="{{ url_for('auth_bp.register') }}" method="post">
-                  <div class="msg">{{ msg }}</div>
-                    <input id="fullname" name="fullname" type="text" placeholder="Full Name" class="textbox"/></br></br>
-                    <input id ="userid" name="userid" type="text" placeholder="User ID" class="textbox"/></br></br>
-                    <input id="phone" name="phone" type="text" placeholder="Phone Number" class="textbox"/></br></br>
-                    <input id="email" name="email" type="email" placeholder="Email" class="textbox"/></br></br>
-                    <input id="password" name="password" type="password" placeholder="Password" class="textbox"/></br></br>
-                    <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Confirm Password" class="textbox"/></br></br>
-                    <input type="submit" class="btn" value="Sign Up"></br>
-                </form>
-            </h2>
-            <p class="bottom">Already have an account?  <a class="bottom" href="{{url_for('auth_bp.login')}}"> Sign In here</a></p>
-          </div>
-        </div>
-    </body>
+<head>
+	<title>FRED | Sign Up</title>
+	<link rel="icon" type="image/x-icon" href="../static/Black_Robot.png">
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+	<link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+	<nav class="navbaralt">
+		<div class="navbar-container">
+			<a class="logo" href="{{ url_for('views.home')}}">
+				<img src="../static/Black_Robot.png" alt="Logo">
+			</a>
+			<ul class="nav-menu">
+				<li><a href="{{ url_for('auth_bp.register')}}">Sign Up</a></li>
+                <li><a href="{{ url_for('auth_bp.login')}}">Log In</a></li>
+			</ul>
+		</div>
+	</nav>
+	<form class="form" method="POST" action="{{ url_for('auth_bp.register') }}">
+		<div class="form-container">
+			<i class="fab fa-fred"></i>
+			<h1>Sign up for FRED</h1>
+			<div class="msg error-msg">{{ msg }}</div>
+			<input id="userid" name="userid" type="text" placeholder="Username">
+			<input id="email" name="email" type="email" placeholder="Email">
+			<input id="phone" name="phone" type="text" placeholder="Phone Number">
+			<input id="password" name="password" type="password" placeholder="Password">
+			<input id="confirmPassword" name="confirmPassword" type="password" placeholder="Confirm Password">
+			<button type="submit" value="Sign Up">Sign up</button>
+			<p class="switch">Already have an account? <a href="{{ url_for('auth_bp.login')}}">Sign in</a>.</p>
+		</div>
+	</form>
+	<footer class="footer">
+		<div class="footer-container">
+			<p>FRED | Friendly Robot to Ease Dementia 2023</p>
+		</div>
+	</footer>
+</body>
 </html>
-

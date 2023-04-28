@@ -9,8 +9,7 @@ views = Blueprint('views', __name__)
 
 @views.route('/')
 def home():
-    msg = ''
-    return render_template('index.html', msg=msg)
+    return render_template('home.html')
 
 @views.route('/dashboard',methods = ['GET', 'POST'])
 def dashboard():
@@ -31,10 +30,10 @@ def profile():
     #get current user information from db
     user = auth.current_user
     email = auth.current_user['email']
-    name = dbAD.collection('users').document(email).get().to_dict()['name']
+    #name = dbAD.collection('users').document(email).get().to_dict()['name']
     userid = dbAD.collection('users').document(email).get().to_dict()['userid']
     phone = dbAD.collection('users').document(email).get().to_dict()['phone']
-    return render_template('profile.html', email=email, name=name, userid=userid, phone=phone)
+    return render_template('profile.html', email=email, userid=userid, phone=phone)
 
 @views.route('/settings',methods = ['GET', 'POST'])
 def settings():
@@ -44,22 +43,22 @@ def settings():
 @views.route('/patients',methods = ['GET', 'POST'])
 def patients():
     if request.method == 'POST':
-        ID = request.form['ID']
+        name = request.form['name']
         dbAD = current_app.config['dbAD']
         auth = current_app.config['auth']
         try:
-            patients = dbAD.collection('FREDs').document(ID).get().to_dict()['Patient']
-            patient_names = []
-            msg = 'If these are the correct patients, then confirm connection of your account to FRED #' + ID + ": "
-            for i, patient in enumerate(patients):
-                patient_name = (patient.get()).to_dict().get('name')
-                patient_names.append(patient_name)
+            patients = dbAD.collection('patients').document(name).get().to_dict()['name']
+            #patient_names = []
+            msg = 'Confirm that you want to pair with this patient: ' + name #+ ": "
+            #for i, patient in enumerate(patients):
+            #    patient_name = (patient.get()).to_dict().get('name')
+            #    patient_names.append(patient_name)
 
-            patient_names = ", ".join(patient_names)
-            msg = msg + patient_names
+            #patient_names = ", ".join(patient_names)
+            #msg = msg + patient_names
             return render_template('patients.html', msg = msg)
         except:
-            return render_template('patients.html', msg = 'FRED ID invalid')
+            return render_template('patients.html', msg = 'No patients found')
     else:
         return render_template('patients.html')
     
