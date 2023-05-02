@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, current_app
 from datetime import datetime
+from google.cloud import firestore
 #from firebase_admin import auth
 
 
@@ -43,23 +44,37 @@ def settings():
 @views.route('/patients',methods = ['GET', 'POST'])
 def patients():
     if request.method == 'POST':
-        name = request.form['name']
+        patient_email = request.form['email']
+
         dbAD = current_app.config['dbAD']
         auth = current_app.config['auth']
-        try:
-            patients = dbAD.collection('patients').document(name).get().to_dict()['name']
-            #patient_names = []
-            msg = 'Confirm that you want to pair with this patient: ' + name #+ ": "
-            #for i, patient in enumerate(patients):
-            #    patient_name = (patient.get()).to_dict().get('name')
-            #    patient_names.append(patient_name)
 
-            #patient_names = ", ".join(patient_names)
-            #msg = msg + patient_names
-            return render_template('patients.html', msg = msg)
-        except:
-            return render_template('patients.html', msg = 'No patients found')
-    else:
+        user_email = auth.current_user['email']
+        user_ref = dbAD.collection('users').document(user_email)
+
+        user_dict = user_ref.get().to_dict()
+        user_patients = user_dict['patients']
+        patients = []
+        for patient_ref in user_patients:
+            patient_dict = patient_ref.get().to_dict()
+            email = patient_dict['email']
+            patients.append(email)
+        
+        if patient_email in patients: #Patient already paired
+            return render_template('patients.html', msg = 'Patient already paired')
+        else:
+            patient_doc = dbAD.collection('patients').document(patient_email).get()
+            if patient_doc.exists:
+                ref = patient_doc = dbAD.collection('patients').document(patient_email)
+                user_ref.update({
+                    'patients': firestore.ArrayUnion([ref])
+                })
+                
+                return render_template('patients.html', msg = 'Patient added')
+            else:
+                return render_template('patients.html', msg = 'No patient found with that email address')
+    
+    else: #First loaded
         return render_template('patients.html')
     
 @views.route('/notification',methods = ['GET', 'POST'])
@@ -85,10 +100,17 @@ def notification():
         options += f'<option value="{patient["name"]}">{patient["name"]}</option>'
 
     if request.method == 'POST' and 'patient' in request.form and 'message' in request.form:
-        patient = request.form['patient'] #patient name - want to change to email
+        patient = request.form['patient'] #patient name
+
+        #get patient email from patients list
+        for patient_ref in patient_refs:
+            patient_dict = patient_ref.get().to_dict()
+            if(patient_dict['name'] == patient):
+                patient_email = patient_dict['email']
+
         message = request.form['message'] #message for patient
 
-        doc_ref = dbAD.collection('patients').document(patient)
+        doc_ref = dbAD.collection('patients').document(patient_email)
         current_time = datetime.now().strftime('%m/%d/%Y %H:%M:%S')
         doc_ref.update({'messages.' + current_time: message})
         doc_ref.update({'notification': True})
@@ -134,7 +156,13 @@ def mood():
         for patient in patients:
             options += f'<option value="{patient["name"]}">{patient["name"]}</option>'
 
-    moodmap = dbAD.collection('patients').document(selected_patient).get().to_dict()["mood"]
+    #get patient email from patients list
+    for patient_ref in patient_refs:
+        patient_dict = patient_ref.get().to_dict()
+        if(patient_dict['name'] == selected_patient):
+            patient_email = patient_dict['email']   
+
+    moodmap = dbAD.collection('patients').document(patient_email).get().to_dict()["mood"]
 
     list = [(k, v) for k, v in moodmap.items()]
 
