@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Calendar</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
     <style>
         .day {
             border: 1px solid black;
@@ -63,6 +64,9 @@
     {% else %}
         <p>No events, reminders or tasks found.</p>
     {% endif %}
+
+    <br>
+    <a href="{{ url_for('views.dashboard') }}" class="btn">Back</a>
 </body>
 </html>
 

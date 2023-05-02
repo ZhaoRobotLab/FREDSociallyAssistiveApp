@@ -1,19 +1,96 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title> FRED | Home</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">                    
+        <title>FRED</title>
+        <link rel="icon" type="image/x-icon" href="../static/Black_Robot.png">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="../static/style.css">
     </head>
-    <img class = "fredlogo" src="{{ url_for('static', filename='fredlogo.png') }}" alt="FRED Logo">
-    <body></br></br></br></br>
-        <div align="center">
-          <div align="center" class="border">
-             <div class="msg">{{ msg }}</div>
-                <div class="header">
-                    <h1 class="word">Dashboard</h1>
-             </br></br></br>
-                <a href="{{ url_for('auth_bp.logout') }}" class="btn">Logout</a>
-          </div>
-        </div>
+    <body>
+        <nav class="navbaralt">
+            <div class="navbar-container">
+                <a class="logo" href="{{ url_for('views.home')}}">
+                    <img src="../static/Black_Robot.png" alt="Logo">
+                </a>
+                <ul class="nav-menu">
+                    <li><a href="{{ url_for('auth_bp.register')}}">Sign Up</a></li>
+                    <li><a href="{{ url_for('auth_bp.login')}}">Log In</a></li>
+                </ul>
+            </div>
+        </nav>
+        <section class="spacer">
+            <img class="hero" src="../static/Black_Text.png" alt="Hero">
+        </section>
+        <section id="IntroducingFred">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 content-section">
+                        <h3>Who is FRED?</h3>
+                        <p>FRED is a friendly robot designed to help ease the symptoms of dementia in seniors. With its advanced technology, FRED can provide a range of features and benefits that can improve the quality of life for seniors with dementia.</p>
+                    </div>
+                    <div class="col-md-4 content-section">
+                        <h3>How does FRED work?</h3>
+                        <p>FRED uses a combination of sensors, artificial intelligence, and machine learning to understand the needs and preferences of seniors with dementia. It can provide medicine notifications, play games to stimulate the mind, and provide companionship and emotional support.</p>
+                    </div>
+                    <div class="col-md-4 content-section">
+                        <h3>What are the benefits?</h3>
+                        <ul class="list-unstyled">
+                            <li>The benefits of using FRED include:</li>
+                            <ul>
+                                <li>Improved quality of life for seniors with dementia</li>
+                                <li>Reduced caregiver burden</li>
+                                <li>Increased social interaction and engagement</li>
+                                <li>Improved mental and physical health</li>
+                            </ul>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="FREDFeatures">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 content-section">
+                        <h3>Medicine Notification</h3>
+                        <p>One of the key features of FRED is its ability to provide medicine notifications. FRED can remind seniors to take their medication on time, reducing the risk of missed doses and improving health outcomes.</p>
+                    </div>
+                    <div class="col-md-4 content-section">
+                        <h3>Games and Activities</h3>
+                        <p>FRED also offers a range of games and activities to stimulate the mind and provide entertainment for seniors. These games are designed to be easy to play and accessible to seniors with dementia.</p>
+                    </div>
+                    <div class="col-md-4 content-section">
+                        <h3>Emotional Support</h3>
+                        <p>FRED is also programmed to provide emotional support to seniors with dementia. It can engage in conversation, provide comfort during stressful situations, and offer companionship to seniors who may feel lonely or isolated.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="TheSell">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 content-section">
+                        <h3>User-Friendly Design</h3>
+                        <p>FRED is designed with seniors in mind, with a user-friendly interface and simple controls that make it easy to use.</p>
+                    </div>
+                    <div class="col-md-4 content-section">
+                        <h3>Advanced Technology</h3>
+                        <p>FRED uses advanced technology to provide a range of features and benefits to seniors with dementia. With its sensors, artificial intelligence, and machine learning capabilities, FRED can adapt to the needs and preferences of individual users.</p>
+                    </div>
+                    <div class="col-md-4 content-section">
+                        <h3>Affordable and Accessible</h3>
+                        <p>FRED is an affordable and accessible solution for seniors with dementia, providing a range of benefits at a lower cost than many traditional forms of care. It can be easily integrated into a senior's daily routine, providing ongoing support and assistance as needed.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section>
+            <footer class="footer">
+                <div class="footer-container">
+                    <p>FRED | Friendly Robot to Ease Dementia 2023</p>
+                </div>
+            </footer>
+        </section>
     </body>
 </html>

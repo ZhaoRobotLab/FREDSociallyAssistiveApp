@@ -1,61 +1,172 @@
-/* Exo thin font from Google. */
-@import url(https://fonts.googleapis.com/css?family=Exo:100);
-
-.header{
-    padding: 5px 120px;
-    width: 150px;
-    height: 70px;
-}
-
-.border{
-    padding: 0px 50px;
-    width: 400px;
-    height: 450px;
-    border-radius: 0px;
-}
-
-.btn {
-    padding: 10px 40px;
-    background-color: #999;;
-    color: #FFFFFF;
-    font-style: normal;
-    font-weight: bold;
-    border-radius: 10px;
-    white-space: nowrap;
-}
-
-.textbox{
-    padding: 10px 40px;
-    background-color: #999;;
-    text-color: #FFFFFF;
-    border-radius: 10px;
-}
-     
-::placeholder {
-    color: #FFFFFF;
-    opacity: 1;
-    font-style: normal;
-    font-weight: bold;
-}
-
-.word{
-    color: #999;
-    font-style: normal;
-    font-weight: bold;
-}
-
-.bottom{
-    color: #999;
-    font-style: normal;
-    font-weight: bold;
-}
-
-/* Main styles */
 body {
-  color: #999;
-  font: 400 16px/1.5 exo, ubuntu, "segoe ui", helvetica, arial, sans-serif;
-  text-align: center;
+    margin: 0;
+    padding: 0;
+    background-color: #faf9f7;
+    font-family: "Open Sans", sans-serif;
 }
-.fredlogo{ 
-  max-width: 25%;
+
+.intro {
+    font-size: 80px;
+    text-align: center;
+    font-family: "Open Sans", sans-serif;
+}
+.intro2 {
+    font-size: 40px;
+    text-align: center;
+    font-family: "Open Sans", sans-serif;
+}
+
+.navbaralt {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #faf9f7;
+    z-index: 999;
+    font-family: "Open Sans", sans-serif;
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 70px 20px 70px;
+}
+
+.logo {
+    color: #000;
+    font-size: 30px;
+    font-weight: bold;
+    text-decoration: none;
+    font-family: "Open Sans", sans-serif;
+}
+
+.logo img {
+    max-height: 60px;
+}
+
+.spacer {
+    margin-top: 20px;
+}
+
+.hero {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: 200px;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-menu li {
+    margin-right: 30px;
+}
+
+.nav-menu li:last-child {
+    margin-right: 0;
+}
+
+.nav-menu li a {
+    color: #000;
+    font-size: 18px;
+    text-decoration: none;
+    font-family: "Open Sans", sans-serif;
+}
+
+.burger-menu {
+    display: none;
+    color: #000;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+section {
+    padding-top: 80px;
+}
+
+.footer {
+    background-color: #faf9f7;
+    padding: 20px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+  
+.footer-container {
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+.form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.form-container {
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px #e1e4e8;
+    margin-top: 30px;
+    padding: 40px;
+    width: 400px;
+}
+.form-container h1 {
+    font-size: 24px;
+    margin: 0;
+    margin-bottom: 30px;
+    text-align: center;
+}
+.form-container input[type="text"], .form-container input[type="password"], .form-container input[type="email"], .form-container input[type="phone"], .form-container input[type="confirmPassword"] {
+    background-color: #faf9f7;
+    border: 1px solid #d1d5da;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 16px;
+    margin-bottom: 20px;
+    padding: 10px;
+    width: 100%;
+}
+.form-container button {
+    background-color: #727272;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 10px;
+    width: 100%;
+}
+.form-container button:hover {
+    background-color: #5C5C5C;
+}
+.form-container .fa-fred {
+    content: url("Black FRED.png");
+    max-width: 60%;
+    color: #24292e;
+    font-size: 64px;
+    margin-bottom: 20px;
+}
+.form-container .switch {
+    color: #000;
+    font-size: 14px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.msg {
+    color: black;
+    font-size: 14px;
+    text-align: center;
+    padding-bottom: 12px;
+}
+
+.error-msg {
+    color: red;
 }

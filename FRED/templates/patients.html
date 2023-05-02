@@ -2,7 +2,7 @@
     <head>
         <meta charset="UTF-8">
         <title> FRED | Patients</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">                    
+        <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">                    
     </head>
     <img class = "fredlogo" src="{{ url_for('static', filename='fredlogo.png') }}" alt="FRED Logo">
     <body></br></br></br></br>
@@ -14,7 +14,7 @@
         </br></br></br>
         <form action="{{ url_for('views.patients') }}" method="post">
             <div class="msg">Search for a patient:</div>
-            <input id="ID" name="ID" type="text" placeholder="Enter Patient Name" class="textbox"/></br></br>
+            <input id="email" name="email" type="text" placeholder="Enter Patient Email" class="textbox"/></br></br>
             <input type="submit" class="btn" value="Search"></br></br>
         </form>
         <div class="msg">{{ msg }}</div>
