@@ -146,8 +146,8 @@ def calendar():
 
     # Create a list of days in the week
     week_days = []
-    for i in range(7):
-        day = start_of_week + timedelta(days=i)
+    for i in range(1): #range(7):
+        day = timedelta(days=i) #start_of_week + timedelta(days=i)
         week_days.append(day)
 
     # Fetch events/tasks/reminders for the selected calendar ID and time range

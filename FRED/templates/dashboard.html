@@ -1,45 +1,151 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title> FRED | Dashboard</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">                     
+        <title>FRED | Dashboard</title>
+        <link rel="icon" type="image/x-icon" href="../static/Black_Robot.png">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="../static/style.css">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </head>
-    <img class = "fredlogo" src="{{ url_for('static', filename='fredlogo.png') }}" alt="FRED Logo">
     <body>
-        <div align="center">
-            <div align="center" class="border">
-                <div class="header">
-                    <h1 class="word">Dashboard</h1>
-                    <div class="msg">Welcome {{ userid }}</div>
-                    <br></br>
-                    <button onclick="location.href='{{ url_for('views.profile')}}'" class="btn animated">My Profile</button>
-                    <br></br>
-                    <!-- <button onclick="location.href='{{ url_for('views.settings')}}'" class="btn animated">Settings</button>
-                    <br></br> -->
-                    <button onclick="location.href='{{ url_for('views.patients')}}'" class="btn animated">My Patients</button>
-                    <br></br>
-                    <button onclick="location.href='{{ url_for('views.notification')}}'" class="btn animated">Send Notification</button>
-                    <br></br>
-                    <button onclick="location.href='{{ url_for('auth_bp.calendar')}}'" class="btn animated">Google Calendar</button>
-                    <br></br>
-                    <button onclick="location.href='{{ url_for('views.mood')}}'" class="btn animated">Mood Graph</button>
-                    <br></br><br></br>
-                    <a href="{{ url_for('auth_bp.logout') }}" class="btn">Logout</a>
+        <nav class="navbaralt">
+            <div class="navbar-container">
+                <a class="logo" href="{{ url_for('views.dashboard')}}">
+                    <img src="../static/Black_Robot.png" alt="Logo">
+                </a>
+                <div class="name">Welcome, {{ userid }}!</div>
+            </div>
+        </nav>
+        <div class="container container-wide">
+            <div class="form">
+                <div class="wrapper">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <form action="{{ url_for('views.dashboard') }}" method="POST">
+                                    <i class="fab fa-fred"></i>
+                                    <h1>Message Your Patient</h1>
+                                    <div class="msg confirm-msg">{{ msg_sent }}</div>
+                                    <select class="select" id="patient" name="patient" type="select">
+                                        <option disabled selected value="">Select a Patient</option>
+                                        {{ options | safe }}
+                                    </select>
+                                    <input id="message" name="message" type="text" placeholder="Message">
+                                    <button type="submit" value="Send Notification">Send Message</button>
+                            </form>
+                            <hr>
+                            <form class="add_request" action="{{ url_for('views.dashboard') }}" method="POST">
+                                    <h1>Add a patient</h1>
+                                    <div class="msg error-msg">{{ patient_error }}</div>
+                                    <div class="msg confirm-msg">{{ patient_confirm }}</div>
+                                    <input id="patientemail" name="patientemail" type="text" placeholder="Patient Email">
+                                    <button type="submit" value="Send Request">Send Patient Request</button>
+                            </form>
+                        </div>
+                        <div class="col-md-6 v-border">
+                            <form class="mood" action="{{ url_for('views.dashboard') }}" method="POST">
+                                <h1>Mood Chart</h1>
+                                <select class="select" onchange="this.form.submit()" id="mood_patient" name="mood_patient" type="select">
+                                    <!-- <option disabled selected value="">Select a Patient</option> -->
+                                    {{ mood_options | safe }}
+                                </select>
+                                <canvas id="myChart"></canvas>
+                                <script>
+                                    var ctx = document.getElementById('myChart').getContext('2d');
+                                    var labels = {{ labels | tojson }};
+                                    var values = {{ values | tojson }};
+                                    var data = {
+                                        labels: labels,
+                                        datasets: [{
+                                            label: 'Mood',
+                                            data: values,
+                                            backgroundColor: 'rgba(20,120,219, 1)',
+                                            borderColor: 'rgba(20,120,219, 1)',
+                                            borderWidth: 5
+                                        }]
+                                    };
+                                    var myChart = new Chart(ctx, {
+                                        type: 'line',
+                                        data: data,
+                                        options: {
+                                            plugins: {
+                                                legend: {
+                                                    display: false
+                                                }
+                                            },
+                                            scales: {
+                                                y: {
+                                                    beginAtZero: true,
+                                                    max: 10
+                                                }
+                                            }
+                                        }
+                                    });
+                                </script>
+                            </form>
+                        </div>
+                        <div class="col-md-3">
+                            <h1>Calendar</h1>
+                            <form method="POST">
+                                <select class="select" id="calendar_id" name="calendar_id" type="select">
+                                    {% for calendar in calendars %}
+                                        <option value="{{ calendar.id }}" {% if selected_calendar_id == calendar.id %}selected{% endif %}>{{ calendar.summary }}</option>
+                                    {% endfor %}
+                                </select>
+                                <button type="submit" value="Select Calendar">Select Calendar</button>
+                            </form>
+                            {% if events_by_day or reminders_by_day or tasks_by_day %}
+                                <h2>{{ selected_calendar_id }} Events, Reminders and Tasks</h2>
+                                {% for day, events in events_by_day.items() %}
+                                    <div class="day">
+                                        <h3>{{ day.strftime('%A, %B %d') }}</h3>
+                                        <h4>Events</h4>
+                                        {% if events %}
+                                            <ul>
+                                                {% for event in events %}
+                                                    <li>{{ event.summary }} - {{ event.start.dateTime }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% else %}
+                                            <p>No events found.</p>
+                                        {% endif %}
+                                        <h4>Reminders</h4>
+                                        {% if reminders_by_day.get(day) %}
+                                            <ul>
+                                                {% for reminder in reminders_by_day[day] %}
+                                                    <li>{{ reminder.summary }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% else %}
+                                            <p>No reminders found.</p>
+                                        {% endif %}
+                                        <h4>Tasks</h4>
+                                        {% if tasks_by_day.get(day) %}
+                                            <ul>
+                                                {% for task in tasks_by_day[day] %}
+                                                    <li>{{ task.title }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% else %}
+                                            <p>No tasks found.</p>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <p>No events, reminders or tasks found.</p>
+                            {% endif %}
+
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <script>
-            const buttons = document.querySelectorAll('.animated');
 
-            buttons.forEach(button => {
-                button.addEventListener('mouseover', () => {
-                    button.classList.add('animate__animated', 'animate__bounce');
-                });
-
-                button.addEventListener('mouseout', () => {
-                    button.classList.remove('animate__animated', 'animate__bounce');
-                });
-            });
-        </script>
+        <footer class="footer">
+            <div class="footer-container">
+                <p>FRED | Friendly Robot to Ease Dementia 2023</p>
+            </div>
+        </footer>
     </body>
 </html>

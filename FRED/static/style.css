@@ -77,6 +77,12 @@ body {
     font-family: "Open Sans", sans-serif;
 }
 
+.name {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+}
+
 .burger-menu {
     display: none;
     color: #000;
@@ -102,11 +108,111 @@ section {
     margin: 0 auto;
 }
 
+.container-wide {
+    max-width: 100vw;
+}
+
 .form {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+}
+
+.form_left {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    height: 100vh;
+}
+
+.red {
+    background-color: #FF0000;
+}
+
+.wrapper {
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px #e1e4e8;
+    /* margin-top: 18%; */
+    padding: 40px;
+    width: 95%;
+}
+
+.wrapper h1 {
+    font-size: 24px;
+    margin: 0;
+    margin-bottom: 30px;
+    text-align: center;
+}
+.wrapper input[type="text"], .wrapper input[type="password"], .wrapper input[type="email"], .wrapper input[type="phone"], .wrapper input[type="confirmPassword"], .wrapper select[type="select"] {
+    background-color: #faf9f7;
+    border: 1px solid #d1d5da;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 16px;
+    margin-bottom: 20px;
+    padding: 10px;
+    width: 100%;
+}
+
+.wrapper .select:focus {
+    outline: none;
+    border-color: #000;
+    box-shadow: 0 0 0 1px #000;
+}
+
+.wrapper .select:hover {
+    cursor: pointer;
+}
+  
+.wrapper .select option {
+    background-color: #faf9f7;
+    color: #333;
+}
+  
+.wrapper .select option:hover {
+    cursor: pointer;
+    background-color: #5C5C5C !important;
+    color: #faf9f7 !important;
+}
+
+.wrapper button {
+    background-color: #727272;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 10px;
+    width: 100%;
+}
+.wrapper button:hover {
+    background-color: #5C5C5C;
+}
+.wrapper .fa-fred {
+    content: url("Black FRED.png");
+    max-width: 60%;
+    color: #24292e;
+    font-size: 64px;
+    margin-bottom: 20px;
+}
+.wrapper .fa-robot {
+    content: url("Black Robot.png");
+    max-width: 10%;
+    color: #24292e;
+    font-size: 64px;
+    margin-bottom: 20px;
+}
+.wrapper .switch {
+    color: #000;
+    font-size: 14px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.wrapper .add_request {
+    padding-top: 20px;
 }
 
 .form-container {
@@ -123,6 +229,7 @@ section {
     margin-bottom: 30px;
     text-align: center;
 }
+
 .form-container input[type="text"], .form-container input[type="password"], .form-container input[type="email"], .form-container input[type="phone"], .form-container input[type="confirmPassword"] {
     background-color: #faf9f7;
     border: 1px solid #d1d5da;
@@ -133,6 +240,28 @@ section {
     padding: 10px;
     width: 100%;
 }
+
+.form-container .select:focus {
+    outline: none;
+    border-color: #000;
+    box-shadow: 0 0 0 1px #000;
+}
+
+.form-container .select:hover {
+    cursor: pointer;
+}
+  
+.form-container .select option {
+    background-color: #faf9f7;
+    color: #333;
+}
+  
+.form-container .select option:hover {
+    cursor: pointer;
+    background-color: #5C5C5C !important;
+    color: #faf9f7 !important;
+}
+
 .form-container button {
     background-color: #727272;
     border: none;
@@ -143,6 +272,8 @@ section {
     padding: 10px;
     width: 100%;
 }
+
+
 .form-container button:hover {
     background-color: #5C5C5C;
 }
@@ -153,12 +284,31 @@ section {
     font-size: 64px;
     margin-bottom: 20px;
 }
+
+.form-container .fa-robot {
+    content: url("Black Robot.png");
+    max-width: 20%;
+    color: #24292e;
+    font-size: 64px;
+    margin-bottom: 20px;
+}
+
 .form-container .switch {
     color: #000;
     font-size: 14px;
     margin-top: 20px;
     text-align: center;
 }
+
+.form-container .add_request {
+    padding-top: 20px;
+}
+
+.v-border {
+    border-right: 1px solid #eee;
+    border-left: 1px solid #eee;
+}
+
 
 .msg {
     color: black;
@@ -169,4 +319,8 @@ section {
 
 .error-msg {
     color: red;
+}
+
+.confirm-msg {
+    color: green;
 }
