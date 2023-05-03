@@ -19,7 +19,7 @@ url_callback = "https://127.0.0.1:8080/oauth2callback"
 
 
 
-@auth_bp.route('/Login', methods = ['GET', 'POST'])
+@auth_bp.route('/login', methods = ['GET', 'POST'])
 def login():
     msg = ''
     dbAD = current_app.config['dbAD']
@@ -36,10 +36,10 @@ def login():
         except Exception as e:
             print(str(e))
             msg = 'Please check your login details and try again'
-            return render_template('Login.html', msg = msg)
+            return render_template('login.html', msg = msg)
 
     else:
-        return render_template('Login.html', msg = msg)
+        return render_template('login.html', msg = msg)
     
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
