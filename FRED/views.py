@@ -3,7 +3,25 @@ from datetime import datetime
 from google.cloud import firestore
 #from firebase_admin import auth
 
+
+#NEW
+from flask import Blueprint, render_template, redirect, url_for, request, current_app, session
+import google.oauth2.credentials
+import google_auth_oauthlib.flow
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+from datetime import datetime, timedelta, date
+from google.auth.transport import requests
+import json
+import os
+from datetime import datetime
+#from firebase_admin.auth import sign_in_with_email_and_password
+
+import re
 views = Blueprint('views', __name__)
+client_key_file_path = os.path.join(os.path.dirname(__file__), 'key', 'client_secret.json')
+client_scopes = [ "https://www.googleapis.com/auth/calendar",  "https://www.googleapis.com/auth/userinfo.email",'https://www.googleapis.com/auth/tasks.readonly' ,   "openid"]
+url_callback = "https://127.0.0.1:8080/oauth2callback"
 
 @views.route('/')
 def home():
@@ -14,7 +32,7 @@ def dashboard():
     dbAD = current_app.config['dbAD']
     auth = current_app.config['auth']
     user = auth.current_user
-    user_email = auth.current_user['email']
+    user_email = user['email']
     user_ref = dbAD.collection('users').document(user_email)
     phone = dbAD.collection('users').document(user_email).get().to_dict()['phone']
 
@@ -132,8 +150,103 @@ def dashboard():
 
     #End Mood Graph##################################################
 
+    #START Calenadar#######################################################
+    if "credentials" not in session:
+            return redirect(url_for("auth_bp.google_auth"))
 
-    return render_template('dashboard.html', userid = user_email, phone=phone, options=options, mood_options=mood_options, labels=labels, values=values, msg_sent = msg_sent, patient_confirm=patient_confirm, patient_error=patient_error)
+    # Load the credentials from the session
+    credentials = google.oauth2.credentials.Credentials.from_authorized_user_info(json.loads(session["credentials"]))
+
+
+    # Check if the access token is expired
+    if credentials.expired:
+        # Refresh the access token using the refresh token
+        credentials.refresh(requests.Request())
+
+        # Save the updated credentials in the session
+        session["credentials"] = credentials.to_json()
+
+    events_service = build("calendar", "v3", credentials=credentials)
+
+    # Retrieve the user's available calendars
+    calendar_list = events_service.calendarList().list().execute()
+    calendars = calendar_list.get('items', [])
+
+    if request.method == 'POST':
+        # Retrieve the selected calendar ID and date from the form data
+        selected_calendar_id = request.form.get('calendar_id')
+        selected_date_str = request.form.get('selected_date')
+        selected_date = datetime.strptime(selected_date_str, '%Y-%m-%d').date()
+    else:
+        # Use the default calendar ID ('primary') and current date
+        selected_calendar_id = 'primary'
+        selected_date = datetime.now().date()
+
+    print(selected_date)
+    start_of_day = datetime.combine(selected_date, datetime.min.time()) 
+    end_of_day = datetime.combine(selected_date, datetime.max.time()) 
+    start_of_day_utc = start_of_day.isoformat() + 'Z'
+    end_of_day_utc = end_of_day.isoformat() + 'Z'
+
+
+    print(start_of_day_utc)
+    print(end_of_day_utc)
+
+    # Fetch events
+    # events_result = events_service.events().list(calendarId=selected_calendar_id, timeMin=start_of_day_utc, timeMax=end_of_day_utc, maxResults=10, singleEvents=True, orderBy='startTime').execute()
+#     events_result = events_service.events().list(
+#     calendarId=selected_calendar_id,
+#     timeMin=start_of_day_utc,
+#     timeMax=end_of_day_utc,
+#     maxResults=10,
+#     singleEvents=True,
+#     orderBy='startTime',
+#     q = 'start>={}T00:00:00Z AND end<={}T23:59:59Z'.format(selected_date, selected_date) #??:'
+#     #q='start>={} OR (end<={} AND start>={})'.format(selected_date, selected_date, selected_date) #??:()
+# ).execute()
+    # events = events_result.get('items', [])
+
+    # print(events)
+
+    #End Calendar####################################################
+
+
+    return render_template('dashboard.html', userid = user_email, phone=phone, options=options, mood_options=mood_options, labels=labels, values=values, msg_sent = msg_sent, patient_confirm=patient_confirm, patient_error=patient_error, calendars=calendars, selected_calendar_id=selected_calendar_id, selected_date=selected_date, events=events)
+
+
+@views.route('/google_auth')
+def google_auth():
+    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(client_key_file_path, scopes=client_scopes)
+    flow.redirect_uri = url_callback
+    authorization_url, state = flow.authorization_url(access_type="offline", prompt="consent")
+    session["state"] = state
+    return redirect(authorization_url)
+
+
+@views.route("/oauth2callback")
+def oauth2callback():
+    state = session["state"]
+    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(client_key_file_path, scopes=client_scopes, state=state)
+    
+    flow.redirect_uri = url_callback
+    authorization_response = url_callback + request.full_path
+
+    flow.fetch_token(authorization_response=authorization_response)
+    credentials = flow.credentials
+    refresh_token = credentials.refresh_token
+    session['refresh_token'] = refresh_token
+
+    session["credentials"] = {
+        "token": credentials.token,
+        "refresh_token": refresh_token,
+        "token_uri": credentials.token_uri,
+        "client_id": credentials.client_id,
+        "client_secret": credentials.client_secret,
+        "scopes": credentials.scopes,
+    }
+    session["credentials"] = credentials.to_json()
+    return redirect(url_for("auth_bp.calendar"))
+
 
 @views.route('/profile',methods = ['GET', 'POST'])
 def profile():

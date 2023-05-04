@@ -145,7 +145,7 @@ section {
     margin-bottom: 30px;
     text-align: center;
 }
-.wrapper input[type="text"], .wrapper input[type="password"], .wrapper input[type="email"], .wrapper input[type="phone"], .wrapper input[type="confirmPassword"], .wrapper select[type="select"] {
+.wrapper input[type="text"], .wrapper input[type="password"], .wrapper input[type="email"], .wrapper input[type="phone"], .wrapper input[type="confirmPassword"], .wrapper select[type="select"], .wrapper input[type="date"] {
     background-color: #faf9f7;
     border: 1px solid #d1d5da;
     border-radius: 6px;
@@ -230,7 +230,7 @@ section {
     text-align: center;
 }
 
-.form-container input[type="text"], .form-container input[type="password"], .form-container input[type="email"], .form-container input[type="phone"], .form-container input[type="confirmPassword"] {
+.form-container input[type="text"], .form-container input[type="password"], .form-container input[type="email"], .form-container input[type="phone"], .form-container input[type="confirmPassword"], .form-container input[type="date"] {
     background-color: #faf9f7;
     border: 1px solid #d1d5da;
     border-radius: 6px;
