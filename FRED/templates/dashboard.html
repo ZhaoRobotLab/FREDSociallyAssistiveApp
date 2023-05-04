@@ -88,52 +88,26 @@
                         <div class="col-md-3">
                             <h1>Calendar</h1>
                             <form method="POST">
-                                <select class="select" id="calendar_id" name="calendar_id" type="select">
+                                <select class="select" onchange="this.form.submit()" id="calendar_id" name="calendar_id" type="select">
                                     {% for calendar in calendars %}
                                         <option value="{{ calendar.id }}" {% if selected_calendar_id == calendar.id %}selected{% endif %}>{{ calendar.summary }}</option>
                                     {% endfor %}
                                 </select>
-                                <button type="submit" value="Select Calendar">Select Calendar</button>
+                                <input class="date" onchange="this.form.submit()" type="date" name="selected_date" id="selected_date" value="{{ selected_date }}">
                             </form>
-                            {% if events_by_day or reminders_by_day or tasks_by_day %}
-                                <h2>{{ selected_calendar_id }} Events, Reminders and Tasks</h2>
-                                {% for day, events in events_by_day.items() %}
-                                    <div class="day">
-                                        <h3>{{ day.strftime('%A, %B %d') }}</h3>
-                                        <h4>Events</h4>
-                                        {% if events %}
-                                            <ul>
-                                                {% for event in events %}
-                                                    <li>{{ event.summary }} - {{ event.start.dateTime }}</li>
-                                                {% endfor %}
-                                            </ul>
-                                        {% else %}
-                                            <p>No events found.</p>
-                                        {% endif %}
-                                        <h4>Reminders</h4>
-                                        {% if reminders_by_day.get(day) %}
-                                            <ul>
-                                                {% for reminder in reminders_by_day[day] %}
-                                                    <li>{{ reminder.summary }}</li>
-                                                {% endfor %}
-                                            </ul>
-                                        {% else %}
-                                            <p>No reminders found.</p>
-                                        {% endif %}
-                                        <h4>Tasks</h4>
-                                        {% if tasks_by_day.get(day) %}
-                                            <ul>
-                                                {% for task in tasks_by_day[day] %}
-                                                    <li>{{ task.title }}</li>
-                                                {% endfor %}
-                                            </ul>
-                                        {% else %}
-                                            <p>No tasks found.</p>
-                                        {% endif %}
-                                    </div>
+                            {% if events %}
+                            <h2>Events:</h2>
+                            <ul>
+                                {% for event in events %}
+                                <li>{{ event.summary }}
+                                    {% if event.start.__class__ == datetime %} {{ event.start.strftime('%H:%M') }}
+                                    {% endif %}
+                                    {% if event.end.__class__ == datetime %} - {{ event.end.strftime('%H:%M') }}
+                                    {% endif %}</li>
                                 {% endfor %}
+                            </ul>
                             {% else %}
-                                <p>No events, reminders or tasks found.</p>
+                            <p>No events for the selected date and calendar.</p>
                             {% endif %}
 
                         </div>
