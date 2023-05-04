@@ -193,25 +193,29 @@ def dashboard():
     print(end_of_day_utc)
 
     # Fetch events
-    # events_result = events_service.events().list(calendarId=selected_calendar_id, timeMin=start_of_day_utc, timeMax=end_of_day_utc, maxResults=10, singleEvents=True, orderBy='startTime').execute()
-#     events_result = events_service.events().list(
-#     calendarId=selected_calendar_id,
-#     timeMin=start_of_day_utc,
-#     timeMax=end_of_day_utc,
-#     maxResults=10,
-#     singleEvents=True,
-#     orderBy='startTime',
-#     q = 'start>={}T00:00:00Z AND end<={}T23:59:59Z'.format(selected_date, selected_date) #??:'
-#     #q='start>={} OR (end<={} AND start>={})'.format(selected_date, selected_date, selected_date) #??:()
-# ).execute()
-    # events = events_result.get('items', [])
+    events_result = events_service.events().list(calendarId=selected_calendar_id, timeMin=start_of_day_utc, timeMax=end_of_day_utc, maxResults=10, singleEvents=True, orderBy='startTime').execute()
 
-    # print(events)
+    events = events_result.get('items', [])
+    filtered_events = []
+
+    for event in events:
+        start = event.get('start', {}).get('date') or event.get('start', {}).get('dateTime')
+        end = event.get('end', {}).get('date') or event.get('end', {}).get('dateTime')
+
+        if start is None or end is None:
+            continue
+
+        start_date = datetime.fromisoformat(start).date()
+        end_date = datetime.fromisoformat(end).date()
+
+        if start_date == selected_date or (start_date < selected_date and end_date > selected_date):
+            filtered_events.append(event)
+        print(filtered_events)
 
     #End Calendar####################################################
 
 
-    return render_template('dashboard.html', userid = user_email, phone=phone, options=options, mood_options=mood_options, labels=labels, values=values, msg_sent = msg_sent, patient_confirm=patient_confirm, patient_error=patient_error, calendars=calendars, selected_calendar_id=selected_calendar_id, selected_date=selected_date, events=events)
+    return render_template('dashboard.html', datetime=datetime, userid = user_email, phone=phone, options=options, mood_options=mood_options, labels=labels, values=values, msg_sent = msg_sent, patient_confirm=patient_confirm, patient_error=patient_error, calendars=calendars, selected_calendar_id=selected_calendar_id, selected_date=selected_date, events=filtered_events)
 
 
 @views.route('/google_auth')

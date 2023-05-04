@@ -99,7 +99,11 @@
                             <h2>Events:</h2>
                             <ul>
                                 {% for event in events %}
-                                <li>{{ event.summary }}</li>
+                                <li>{{ event.summary }}
+                                    {% if event.start.__class__ == datetime %} {{ event.start.strftime('%H:%M') }}
+                                    {% endif %}
+                                    {% if event.end.__class__ == datetime %} - {{ event.end.strftime('%H:%M') }}
+                                    {% endif %}</li>
                                 {% endfor %}
                             </ul>
                             {% else %}
