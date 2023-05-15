@@ -1,3 +1,5 @@
+![Fred](/FRED/static/fred_black.png)
+
 # FRED: Socially Assistive App
 ## About
 
